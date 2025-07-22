@@ -2,8 +2,10 @@
   "name": "currency-exchange-v2",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -16,5 +18,11 @@
     "url": "https://github.com/oYo-yang/currency-exchange-v2/issues"
   },
   "homepage": "https://github.com/oYo-yang/currency-exchange-v2#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "prime-number-check": "^1.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.0.5"
+  }
 }
