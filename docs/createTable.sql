@@ -21,3 +21,17 @@ CREATE TABLE users (
 );
 
 
+INSERT INTO currencies (code, name, symbol, country)
+VALUES 
+('USD', 'US Dollar', '$', 'United States'),
+('EUR', 'Euro', '€', 'European Union'),
+('JPY', 'Japanese Yen', '¥', 'Japan'),
+('GBP', 'British Pound', '£', 'United Kingdom'),
+('CNY', 'Chinese Yuan', '¥', 'China');
+
+INSERT INTO users (email, password_hash, username)
+VALUES
+('alice@example.com', 'hashed_password_1', 'alice123'),
+('bob@example.com', 'hashed_password_2', 'bob456'),
+('carol@example.com', 'hashed_password_3', 'carol789');
+
