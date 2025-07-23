@@ -16,6 +16,9 @@ paths:
     get:
       tags: [Currency]
       summary: List all currencies
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
       responses:
         '200':
           description: A list of currencies
@@ -27,104 +30,159 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Currency'
+              $ref: '#/components/schemas/CurrencyCreateReq'
+            example:
+              code: EUR
+              name: Euro
+              symbol: €
+              country: European Union
       responses:
         '201':
           description: Currency created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Currency'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Currency code already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
-  /currency/{id}:
+  /currency/{code}:
     get:
       tags: [Currency]
-      summary: Get currency by ID
+      summary: Get one currency by ISO code
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/CodePath'
       responses:
         '200':
-          description: Currency found
+          description: Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Currency'
+        '404':
+          $ref: '#/components/responses/NotFound'
     put:
       tags: [Currency]
-      summary: Update a currency
+      summary: Update a currency by code
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/CodePath'
+        - $ref: '#/components/parameters/NameQuery'
+        - $ref: '#/components/parameters/CountryQuery'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Currency'
+              $ref: '#/components/schemas/CurrencyUpdateReq'
       responses:
         '200':
-          description: Currency updated
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Currency'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
     delete:
       tags: [Currency]
-      summary: Delete a currency
+      summary: Delete a currency by code
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/CodePath'
       responses:
-        '200':
-          description: Currency deleted
+        '204':
+          description: Deleted (no content)
+        '404':
+          $ref: '#/components/responses/NotFound'
 
-  /currency/search:
-    get:
-      tags: [Currency]
-      summary: Search currencies by query
-      parameters:
-        - in: query
-          name: name
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Matching currencies
-
-  /user:
-    get:
-      tags: [User]
-      summary: List all users
-      responses:
-        '200':
-          description: A list of users
+  /user/register:
     post:
       tags: [User]
-      summary: Create a new user
+      summary: Register a new user
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - email
+                - password
       responses:
         '201':
-          description: User created
+          description: User registered successfully
 
-  /user/{id}:
-    get:
+  /user/login:
+    post:
       tags: [User]
-      summary: Get user by ID
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
+      summary: Login an existing user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
       responses:
         '200':
-          description: User found
+          description: Login successful
+        '401':
+          description: Unauthorized
+
+  /user/logout:
+    post:
+      tags: [User]
+      summary: Logout current user
+      responses:
+        '200':
+          description: Logout successful
+
+  /user/profile:
+    get:
+      tags: [User]
+      summary: Get current user profile by ID
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+        '401':
+          description: Unauthorized
+
     put:
       tags: [User]
-      summary: Update a user
+      summary: Update user profile by ID
       parameters:
         - in: path
           name: id
@@ -140,6 +198,8 @@ paths:
       responses:
         '200':
           description: User updated
+
+  /user/delete:
     delete:
       tags: [User]
       summary: Delete a user
@@ -153,18 +213,18 @@ paths:
         '200':
           description: User deleted
 
-  /user/search:
-    get:
-      tags: [User]
-      summary: Search users
-      parameters:
-        - in: query
-          name: email
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Matching users
+  # /user/search:
+  #   get:
+  #     tags: [User]
+  #     summary: Search users
+  #     parameters:
+  #       - in: query
+  #         name: email
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: Matching users
 
   /watchlist:
     get:
@@ -244,24 +304,151 @@ paths:
           description: Matching watchlists
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    CodePath:
+      name: code
+      in: path
+      required: true
+      description: ISO 4217 currency code (e.g., USD)
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 3
+        example: USD
+    CodeQuery:
+      name: code
+      in: query
+      required: false
+      description: Partial or exact currency code
+      schema:
+        type: string
+        example: US
+    NameQuery:
+      name: name
+      in: query
+      required: false
+      description: Full name of the currency
+      schema:
+        type: string
+        example: United States Dollar
+    CountryQuery:
+      name: country
+      in: query
+      required: false
+      description: Country name of the currency
+      schema:
+        type: string
+        example: United States
+    SymbolQuery:
+      name: symbol
+      in: query
+      required: false
+      description: Currency symbol
+      schema:
+        type: string
+        example: $
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 20
+      description: Page size
+    Offset:
+      name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      description: Skip how many items
+
+  responses:
+    BadRequest:
+      description: Bad request / validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
     Currency:
       type: object
+      required: [code, name, symbol, country]
       properties:
         code:
           type: string
+          description: ISO 4217 currency code (3 letters)
+          example: USD
         name:
           type: string
-        rate:
-          tqype: number
+          example: United States Dollar
+        symbol:
+          type: string
+          example: $
+        country:
+          type: string
+          example: United States
+
+    CurrencyCreateReq:
+      type: object
+      properties:
+        name:
+          type: string
+        country:
+          type: string
+
+    CurrencyUpdateReq:
+      type: object
+      description: Fields allowed to update
+      properties:
+        name:
+          type: string
+        country:
+          type: string
+      additionalProperties: false
 
     User:
       type: object
       properties:
+        id:
+          type: integer
         name:
           type: string
         email:
           type: string
+        password:
+          type: string
+        create_time:
+          type: string
+        update_time:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: Validation failed for field "code"
 
     Watchlist:
       type: object
