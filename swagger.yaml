@@ -1,0 +1,274 @@
+openapi: 3.0.0
+info:
+  title: Currency Exchange API
+  version: 1.0.0
+  description: API for managing currencies, users, and watchlists
+servers:
+  - url: http://localhost:3000
+
+tags:
+  - name: Currency
+  - name: User
+  - name: Watchlist
+
+paths:
+  /currency:
+    get:
+      tags: [Currency]
+      summary: List all currencies
+      responses:
+        '200':
+          description: A list of currencies
+    post:
+      tags: [Currency]
+      summary: Create a new currency
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Currency'
+      responses:
+        '201':
+          description: Currency created
+
+  /currency/{id}:
+    get:
+      tags: [Currency]
+      summary: Get currency by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Currency found
+    put:
+      tags: [Currency]
+      summary: Update a currency
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Currency'
+      responses:
+        '200':
+          description: Currency updated
+    delete:
+      tags: [Currency]
+      summary: Delete a currency
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Currency deleted
+
+  /currency/search:
+    get:
+      tags: [Currency]
+      summary: Search currencies by query
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching currencies
+
+  /user:
+    get:
+      tags: [User]
+      summary: List all users
+      responses:
+        '200':
+          description: A list of users
+    post:
+      tags: [User]
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created
+
+  /user/{id}:
+    get:
+      tags: [User]
+      summary: Get user by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found
+    put:
+      tags: [User]
+      summary: Update a user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated
+    delete:
+      tags: [User]
+      summary: Delete a user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deleted
+
+  /user/search:
+    get:
+      tags: [User]
+      summary: Search users
+      parameters:
+        - in: query
+          name: email
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching users
+
+  /watchlist:
+    get:
+      tags: [Watchlist]
+      summary: List all watchlists
+      responses:
+        '200':
+          description: A list of watchlists
+    post:
+      tags: [Watchlist]
+      summary: Create a watchlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Watchlist'
+      responses:
+        '201':
+          description: Watchlist created
+
+  /watchlist/{id}:
+    get:
+      tags: [Watchlist]
+      summary: Get watchlist by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Watchlist found
+    put:
+      tags: [Watchlist]
+      summary: Update a watchlist
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Watchlist'
+      responses:
+        '200':
+          description: Watchlist updated
+    delete:
+      tags: [Watchlist]
+      summary: Delete a watchlist
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Watchlist deleted
+
+  /watchlist/search:
+    get:
+      tags: [Watchlist]
+      summary: Search watchlists
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching watchlists
+
+components:
+  schemas:
+    Currency:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        rate:
+          tqype: number
+
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+
+    Watchlist:
+      type: object
+      properties:
+        userId:
+          type: string
+        currencies:
+          type: array
+          items:
+            type: string

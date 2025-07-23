@@ -20,7 +20,15 @@
   "homepage": "https://github.com/oYo-yang/currency-exchange-v2#readme",
   "description": "",
   "dependencies": {
-    "prime-number-check": "^1.0.1"
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "http": "^0.0.1-security",
+    "mysql": "^2.18.1",
+    "node-fetch": "^3.3.2",
+    "prime-number-check": "^1.0.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "jest": "^30.0.5"
