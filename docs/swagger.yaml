@@ -16,9 +16,9 @@ paths:
     get:
       tags: [Currency]
       summary: List all currencies
-      parameters:
-        - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/Offset'
+      # parameters:
+        # - $ref: '#/components/parameters/Limit'
+        # - $ref: '#/components/parameters/Offset'
       responses:
         '200':
           description: A list of currencies
