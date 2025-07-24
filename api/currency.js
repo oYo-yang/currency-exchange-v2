@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
 
 // 查询单个货币
 router.get('/:code', (req, res) => {
-  pool.query('SELECT * FROM currencies WHERE code = ?', [req.params.code], (err, results) => {
+  pool.query('SELECT code, name, symbol, country FROM currencies WHERE code = ?', [req.params.code], (err, results) => {
     if (err) return res.status(500).json({ error: err.message })
     if (!results.length) return res.status(404).json({ error: 'Currency not found' })
     res.json(results[0])

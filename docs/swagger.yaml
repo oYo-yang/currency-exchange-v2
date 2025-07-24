@@ -72,8 +72,8 @@ paths:
       summary: Update a currency by code
       parameters:
         - $ref: '#/components/parameters/CodePath'
-        - $ref: '#/components/parameters/NameQuery'
-        - $ref: '#/components/parameters/CountryQuery'
+        # - $ref: '#/components/parameters/NameQuery'
+        # - $ref: '#/components/parameters/CountryQuery'
       requestBody:
         required: true
         content:
@@ -325,7 +325,7 @@ components:
       name: code
       in: path
       required: true
-      description: ISO 4217 currency code (e.g., USD)
+      description: ISO 4217 currency code (e.g.USD)
       schema:
         type: string
         minLength: 3
