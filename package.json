@@ -27,6 +27,7 @@
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
+    "mysql2": "^3.14.2",
     "node-fetch": "^3.3.2",
     "prime-number-check": "^1.0.1",
     "swagger-jsdoc": "^6.2.8",

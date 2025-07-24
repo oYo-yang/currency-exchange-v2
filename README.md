@@ -8,6 +8,7 @@ hi, this repo is only for training!
 
 ```env
 DB_HOST=localhost
+DB_PORT=port
 DB_USER=root
 DB_PASSWORD=your_password
 DB_NAME=currency
