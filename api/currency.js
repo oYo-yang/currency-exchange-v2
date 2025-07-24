@@ -44,15 +44,21 @@ router.get('/:code', (req, res) => {
 // 更新货币
 router.put('/:code', (req, res) => {
   const { name, country } = req.body
-  pool.query(
-    'UPDATE currencies SET name = ?, country = ? WHERE code = ?',
-    [name, country, req.params.code],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: err.message })
-      if (result.affectedRows === 0) return res.status(404).json({ error: 'Currency not found' })
-      res.json({ message: 'Currency updated' })
-    }
-  )
+  pool.query('SELECT * FROM currencies WHERE code = ?', [req.params.code], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message })
+    if (!results.length) return res.status(404).json({ error: 'Currency not found' })
+    const original = results[0]
+    const updatedName = name !== undefined ? name : original.name
+    const updatedCountry = country !== undefined ? country : original.country
+    pool.query(
+      'UPDATE currencies SET name = ?, country = ? WHERE code = ?',
+      [updatedName, updatedCountry, req.params.code],
+      (updateErr, updateResult) => {
+        if (updateErr) return res.status(500).json({ error: updateErr.message })
+        res.json({ message: 'Currency updated' })
+      }
+    )
+  })
 })
 
 // 删除货币
