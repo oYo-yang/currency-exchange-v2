@@ -212,6 +212,8 @@ paths:
     delete:
       tags: [User]
       summary: Delete a user
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
