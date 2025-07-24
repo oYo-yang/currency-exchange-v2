@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import pool from '../db.js'
-const JWT_SECRET = 'your_jwt_secret' // 请替换为安全密钥
+const JWT_SECRET = process.env.JWT_SECRET
 
 const router = express.Router()
 

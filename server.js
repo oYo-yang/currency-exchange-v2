@@ -1,9 +1,11 @@
+import dotenv from 'dotenv'
 import express from 'express'
 import swaggerUi from 'swagger-ui-express'
 import YAML from 'yamljs'
 import currencyRouter from './api/currency.js'
 import userRouter from './api/user.js'
 import watchlistRouter from './api/watchlist.js'
+dotenv.config()
 
 const swaggerDocument = YAML.load('./docs/swagger.yaml')
 const app = express()
