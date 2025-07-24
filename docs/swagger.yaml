@@ -182,7 +182,9 @@ paths:
 
     put:
       tags: [User]
-      summary: Update user profile by ID
+      summary: Update user profile
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -194,7 +196,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
       responses:
         '200':
           description: User updated
@@ -203,6 +212,8 @@ paths:
     delete:
       tags: [User]
       summary: Delete a user
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
